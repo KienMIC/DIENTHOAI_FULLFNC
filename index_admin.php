@@ -139,6 +139,7 @@ if (!isset($_SESSION['username'])) {
 		 <button><a href="signout.php">ĐĂNG XUẤT</a></button>
 		 </div>
 		 <script type="text/javascript" src="script.js"></script>
+		 <script type="text/javascript" src="InageTools.js"></script>
 	</body>
 </html>
 
