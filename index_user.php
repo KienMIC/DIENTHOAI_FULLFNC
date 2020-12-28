@@ -6,6 +6,7 @@ if (!isset($_SESSION['username'])) {
 	 header('Location: signin.php');
 }
 ?>
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -37,15 +38,17 @@ if (!isset($_SESSION['username'])) {
 					$status = $_POST['status'];
 
 						$sqlAdd = "INSERT INTO sanpham (name,maintain,price,image,status) VALUES ('$name','$maintain','$price','$image','$status')";
-						$notice = mysqli_query($con,$sqlAdd);
+						$stmt = $con->prepare($sqlAdd);
+						$query = $stmt->execute();
 					}
 			}
 				
 			if(!isset($_POST['search'])){
 				$sql = "SELECT * FROM sanpham";
-				$result = mysqli_query($con,$sql);
-				if(mysqli_num_rows($result) > 0){
-					while ($row = mysqli_fetch_assoc($result)) {
+				$stmt = $con->prepare($sql);
+				$query = $stmt->execute();
+				if($query){
+					while ($row = $stmt->fetch(PDO::FETCH_ASSOC)){
 				?>				
 		
 			<div class="col-lg-4">
@@ -68,9 +71,11 @@ if (!isset($_SESSION['username'])) {
 				}
 			}else{
 				$querySearch = $_POST['search'];
-				$querySearch = mysqli_query($con,"SELECT * FROM sanpham WHERE name LIKE '%$querySearch%'");
-				if(mysqli_num_rows($querySearch)){
-					while($row = mysqli_fetch_assoc($querySearch)){
+				$sqlSearch = "SELECT * FROM sanpham WHERE name LIKE '%$querySearch%'";
+				$stmt = $con->prepare($sqlSearch);
+				$query = $stmt->execute();
+				if($query){
+					while($row = $stmt->fetch(PDO::FETCH_ASSOC)){
 		 ?>
 		 		<div class="col-lg-4">
 				<div id="idProduct">	
@@ -111,6 +116,7 @@ if (!isset($_SESSION['username'])) {
 		 			<tr>
 						 <td>Hình ảnh sản phẩm:</td>
 						<td><input type="file" name="image">từ phía server (trong folder image htdocs)</td>
+
 		 			</tr>
 		 			<tr>
 		 				<td>Bảo hành:</td>

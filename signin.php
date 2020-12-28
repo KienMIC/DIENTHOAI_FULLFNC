@@ -22,14 +22,15 @@ session_start();
 			echo "username hoặc password bạn không được để trống!";
 		}else{
             $sql = "select * from users where username = '$username' and password = '$password' ";
-            $query = mysqli_query($con,$sql);
-			$num_rows = mysqli_num_rows($query);
-			if ($num_rows==0) {
+			$stmt = $con->prepare($sql);
+			$query = $stmt->execute();
+			$num_rows = $stmt->fetch(PDO::FETCH_ASSOC);
+			if (!$num_rows) {
 				echo "tên đăng nhập hoặc mật khẩu không đúng !";
 			}else{
 				//tiến hành lưu tên đăng nhập vào session để tiện xử lý sau này
                 $_SESSION['username'] = $username;
-                $row = mysqli_fetch_assoc($query);
+                $row = $stmt->fetch(PDO::FETCH_ASSOC);
                 $role = $row['role'];
                 if($role == '1')
                     header('Location: index_admin.php');
